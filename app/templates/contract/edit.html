@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Chỉnh sửa Hợp đồng - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Chỉnh sửa Hợp đồng cho: {{ user.username }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Ngày bắt đầu hiệu lực</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" 
+                               value="{{ contract.start_date.strftime('%Y-%m-%d') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">Ngày kết thúc (để trống nếu vô thời hạn)</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date"
+                            value="{{ contract.end_date.strftime('%Y-%m-%d') if contract.end_date else '' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pay_rate" class="form-label">Mức lương (VNĐ)</label>
+                        <input type="number" class="form-control" id="pay_rate" name="pay_rate" 
+                               value="{{ contract.pay_rate }}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Đơn vị lương</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_unit" id="unit_month" value="month" 
+                                   {% if contract.pay_unit == 'month' %}checked{% endif %}>
+                            <label class="form-check-label" for="unit_month">
+                                Trả lương theo tháng
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_unit" id="unit_hour" value="hour"
+                                   {% if contract.pay_unit == 'hour' %}checked{% endif %}>
+                            <label class="form-check-label" for="unit_hour">
+                                Trả lương theo giờ
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr>
+                    
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ url_for('contract.list_contracts', user_id=user.id) }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Cập nhật Hợp đồng
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

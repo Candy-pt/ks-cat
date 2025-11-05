@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3> Lịch Sử điểm danh cá nhân</h3>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <select class="form-select d-inline w-auto" onchange="filterHistory(this.value)">
+                <option value="">Tất Cả Tháng</option>
+                <option value="current">Tháng Này</option>
+            </select>
+        </div>
+        <table class="table table-striped">
+            <thead><tr><th>Ngày</th><th>Check-in</th><th>Check-out</th><th>Trạng Thái</th></tr></thead>
+            <tbody>
+                {% for att in attendances %}
+                <tr>
+                    <td>{{ att.date }}</td>
+                    <td>{{ att.check_in.strftime('%H:%M') if att.check_in else '-' }}</td>
+                    <td>{{ att.check_out.strftime('%H:%M') if att.check_out else '-' }}</td>
+                    <td>
+                        {% if att.check_in and att.check_out %}
+                            <span class="badge bg-success">Hoàn Thành</span>
+                        {% elif att.check_in %}
+                            <span class="badge bg-warning">Đang Làm</span>
+                        {% else %}
+                            <span class="badge bg-danger">Vắng</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+function filterHistory(month) {
+    // JS đơn giản: Reload với query param (có thể mở rộng backend)
+    window.location.href = `{{ url_for('attendance.history') }}?month=${month}`;
+}
+</script>
+{% endblock %}

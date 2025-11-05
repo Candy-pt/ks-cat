@@ -1,0 +1,304 @@
+/* Phần cũ giữ nguyên (body, nav, flashes, form, button, table, #time) */
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #ECF0F1; } 
+nav { background: #ffffff; padding: 10px; color: white; } /* Navy blue */
+nav a { margin-right: 10px; text-decoration: none; color: white; transition: all 0.3s ease; }
+nav a:hover { text-decoration: none; color: #E2E8F0; font-weight: 600; transform: translateY(-1px); }
+.flashes { color: #0F766E; list-style: none; padding: 0; } 
+form { margin: 20px 0; }
+button { padding: 10px; background: #47ce86e1; color: white; border: none; cursor: pointer; border-radius: 5px; }
+button:hover { background: #1eaf34e0; } 
+table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+th, td { border: 1px solid #f4f6f8; padding: 12px; text-align: left; } 
+th { background-color: #1e3b8aad; color: white; }
+#time { font-size: 24px; color: #e6effb; margin: 10px 0; } 
+
+/* /static/style.css */
+
+:root {
+  --bg-color: #ECF0F1;
+  --primary-dark: #2C3E50;
+  --primary-accent: #3498DB;
+  --secondary-accent: #1ABC9C;
+  --info-color: #95A5A6;
+  --danger-color: #E74C3C;
+  --white-color: #FFFFFF;
+  --text-color: #2C3E50;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Ví dụ áp dụng cho Navbar */
+.navbar {
+  background-color: var(--primary-dark);
+}
+
+/* Ví dụ cho các thẻ thống kê */
+.stats-card.bg-primary { background-color: var(--primary-accent) !important; }
+.stats-card.bg-success { background-color: var(--secondary-accent) !important; }
+.stats-card.bg-info { background-color: var(--info-color) !important; }
+
+/* Ví dụ cho các nút bấm */
+.btn-primary { background-color: var(--primary-accent); border-color: var(--primary-accent); }
+.btn-success { background-color: var(--secondary-accent); border-color: var(--secondary-accent); }
+.btn-danger { background-color: var(--danger-color); border-color: var(--danger-color); }
+
+/* Tiêu đề bảng */
+.card-header {
+    background-color: var(--secondary-accent);
+    color: var(--white-color);
+}
+
+/* Phần : Theme Custom */
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.card { box-shadow: 0 2px 10px rgba(222, 225, 233, 0.848); border-radius: 10px; border: none; margin-bottom: 20px; } /* Cool shadow */
+.card-header { background: #16b543; color: white; padding: 15px; border-radius: 10px 10px 0 0; }
+.btn-success { background: #0F766E; border-color: #0F766E; } 
+.btn-success:hover { background: #115E59; }
+.btn-warning { background: #7C2D12; color: #fefefe; border-color: #7C2D12; }
+.btn-warning:hover { background: #9A3412; }
+.progress { height: 20px; margin: 10px 0; border-radius: 10px; }
+.stats-card { text-align: center; padding: 20px; }
+.stats-card h3 { font-size: 2rem; margin: 0; }
+.loading { display: none; text-align: center; padding: 20px; }
+.spinner { border: 4px solid #F1F5F9; border-top: 4px solid #1E3A8A; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Style QR Scan Page */
+#video { border-radius: 10px; box-shadow: 0 4px 12px rgba(21, 67, 32, 0.308); }
+#result .alert { margin: 10px 0; }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .container { padding: 10px; }
+    #time { font-size: 18px; }
+    table { font-size: 14px; }
+    .btn-lg { width: 100%; margin: 10px 0; padding: 15px; font-size: 16px; }
+}
+
+/* Modern Sidebar Menu - Cho admin.html */
+.admin-sidebar {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(30, 58, 138, 0.1); 
+    padding: 20px 0; height: fit-content; border: 1px solid #CBD5E1; 
+}
+
+.admin-sidebar .sidebar-header {
+    padding: 0 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid #CBD5E1; 
+    margin-bottom: 20px;
+}
+
+.admin-sidebar .sidebar-header h5 {
+    font-size: 1.1rem; font-weight: 600; color: #2C3E50; 
+    margin: 0; display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+}
+
+.admin-sidebar .sidebar-header i { font-size: 1.2rem; }
+
+.admin-sidebar .list-group { border: none; flex-direction: column; }
+
+.admin-sidebar .list-group-item {
+    border: none;
+    padding: 12px 20px;
+    margin: 0 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease; 
+    color: #475569; 
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border-left: 3px solid transparent; 
+}
+
+.admin-sidebar .list-group-item:hover {
+    background: #E0F2FE; 
+    transform: translateX(4px); 
+    border-left-color: #1E3A8A; 
+    color: #1E3A8A;
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.1);
+}
+
+.admin-sidebar .list-group-item i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+    color: #94A3B8; 
+    transition: color 0.3s ease;
+}
+
+.admin-sidebar .list-group-item:hover i { color: #1E3A8A; }
+.admin-sidebar .list-group-item.report-item:hover { border-left-color: #0F766E; color: #0F766E; }
+
+.admin-sidebar .list-group-item.report-item:hover i { color: #0F766E; }
+.admin-sidebar .list-group-item a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+.admin-sidebar .list-group-item:hover a { text-decoration: none; color: inherit; }
+
+/* Mobile: Sidebar full-width khi collapse */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        margin: 10px 0;
+        border-radius: 8px;
+    }
+    .admin-sidebar .list-group-item {
+        margin: 0 5px;
+        padding: 10px 15px;
+    }
+}
+
+a span { font-family: 'Pacifico', cursive; font-weight: bold; font-size: larger; }
+
+
+
+/* Style Toast Popup Nhỏ Góc Trên Trái */
+.toast-container {
+    z-index: 1060 !important;  
+}
+
+.toast {
+    width: 300px;  /* Nhỏ gọn */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);  
+    border: none;
+    border-radius: 8px;
+    opacity: 1 !important; 
+}
+
+.toast .toast-header {
+    background: linear-gradient(135deg, #28a745, #20c997);  /* Gradient xanh đẹp */
+    border-radius: 8px 8px 0 0;
+    color: white !important;
+    opacity: 1 !important;
+    padding: 8px 12px;  
+}
+
+.toast .toast-header i {
+    font-size: 1.1rem;
+}
+
+.toast .toast-body {
+    font-size: 0.95rem;  
+    color: #155724 !important;  
+    padding: 8px 12px;
+    opacity: 1 !important;
+    background: #f8f9fa;  
+    border-radius: 0 0 8px 8px;
+}
+
+/* Animation slide-in từ trái */
+.toast.show {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile: Toast full-width nếu cần */
+@media (max-width: 576px) {
+    .toast {
+        width: 90vw;
+        max-width: 350px;
+    }
+}
+
+/* Kiểu dáng cho Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2C3E50; /* Màu xanh xám đậm */
+    padding: 10px 20px;
+    color: white;
+}
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.icon-button, .avatar-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    padding: 0;
+}
+.avatar-button img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Bo tròn avatar */
+    border: 2px solid #fff;
+}
+
+/* -- PHẦN QUAN TRỌNG NHẤT: DROPDOWN -- */
+
+/* Vùng chứa tương đối để định vị menu con */
+.profile-dropdown { position: relative; }
+
+/* Menu dropdown được ẩn mặc định */
+.dropdown-content {
+    display: none; /* Ẩn đi lúc đầu */
+    position: absolute;
+    top: 130%; /* Vị trí ngay dưới avatar */
+    right: 0;
+    background-color: #137131d1; /* Màu nền tối */
+    min-width: 220px;
+    box-shadow: 0px 8px 16px 0px rgba(4, 122, 22, 0.2);
+    border-radius: 8px;
+    z-index: 100;
+    padding: 8px 0;
+}
+
+/* Class .show để hiện menu lên (sẽ được JS điều khiển) */
+.dropdown-content.show { display: block; }
+
+/* Mũi tên nhỏ trỏ lên */
+.dropdown-arrow {
+    position: absolute;
+    top: -10px; /* Đẩy mũi tên lên trên */
+    right: 15px; /* Căn lề phải cho khớp với avatar */
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #2F3640; /* Màu trùng với nền menu */
+}
+
+/* Kiểu dáng cho các mục trong menu */
+.dropdown-content a {
+    color: #F5F6FA; /* Màu chữ sáng */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Khoảng cách giữa icon và chữ */
+    font-size: 15px;
+}
+
+.dropdown-content a:hover {
+    background-color: #105c28; /* Màu nền khi di chuột qua */
+}
+
+/* Đường kẻ phân cách */
+.dropdown-divider {
+    height: 1px;
+    margin: 8px 0;
+    background-color: #4a515a;
+}

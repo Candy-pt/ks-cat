@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Thông báo của bạn</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for notif in notifications %}
+                        <li class="list-group-item">
+                            <p class="mb-1">{{ notif.message }}</p>
+                            <small class="text-muted">{{ notif.timestamp.strftime('%H:%M ngày %d-%m-%Y') }} (UTC)</small>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item text-center text-muted">
+                            Bạn không có thông báo nào.
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

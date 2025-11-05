@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h3><i class="fas fa-calculator"></i> Bảng Lương Tháng: {{ month_str }}</h3>
+            <form method="GET" action="{{ url_for('payroll.salary_page') }}" class="row g-3 align-items-center mt-2">
+                <div class="col-auto">
+                    <label for="month" class="visually-hidden">Tháng</label>
+                    <select name="month" id="month" class="form-select">
+                        {% for i in range(1, 13) %}
+                            <option value="{{ i }}" {% if i == current_month %}selected{% endif %}>Tháng {{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="year" class="visually-hidden">Năm</label>
+                    <input type="number" name="year" id="year" class="form-control" value="{{ current_year }}" min="2020" max="2050">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-light">Xem</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('payroll.salary_page') }}">
+                <input type="hidden" name="month" value="{{ current_month }}">
+                <input type="hidden" name="year" value="{{ current_year }}">
+                
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Nhân Viên</th>
+                                <th>Lương Tổng (Gross)</th>
+                                <th>Thưởng/Phạt (VND)</th>
+                                <th>Lương Thực Lĩnh (Net)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in payroll_data %}
+                            <tr>
+                                <td class="align-middle"><strong>{{ item.user.username }}</strong></td>
+                                <td class="align-middle">
+                                    {{ "{:,.0f}".format(item.payroll.gross_salary) if item.payroll else '0' }}
+                                </td>
+                                <td>
+                                    <input type="number" 
+                                           name="bonus_{{ item.user.id }}" 
+                                           class="form-control" 
+                                           value="{{ item.bonus_amount or '' }}" 
+                                           placeholder="Nhập số tiền">
+                                </td>
+                                <td class="align-middle fw-bold text-success">
+                                    {{ "{:,.0f}".format(item.payroll.net_salary) if item.payroll else '0' }}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    Không có nhân viên nào trong hệ thống.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Cập Nhật Thưởng & Tính Lại Lương</button>
+                    <a href="{{ url_for('payroll.salary_report_summary', month=current_month, year=current_year) }}" class="btn btn-info"><i class="fas fa-file-csv"></i> Xuất Báo Cáo Tóm Tắt</a>
+                    <a href="{{ url_for('payroll.salary_report_detailed', month=current_month, year=current_year) }}" class="btn btn-secondary"><i class="fas fa-file-alt"></i> Xuất Báo Cáo Chi Tiết</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

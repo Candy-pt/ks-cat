@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Hợp đồng - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Quản lý Hợp đồng cho: <span class="text-primary">{{ user.username }}</span></h2>
+        <a href="{{ url_for('attendance.dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại Danh sách
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5><i class="fas fa-file-contract me-2"></i>Lịch sử Hợp đồng</h5>
+            <a href="{{ url_for('contract.add_contract', user_id=user.id) }}" class="btn btn-success">
+                <i class="fas fa-plus me-2"></i>Thêm Hợp đồng mới
+            </a>
+        </div>
+        <div class="card-body">
+            {% if contracts_data %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ngày Bắt đầu</th>
+                            <th>Ngày Kết thúc</th>
+                            <th>Mức lương</th>
+                            <th>Đơn vị</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in contracts_data %}
+                        <tr>
+                            <td>{{ item.contract.start_date.strftime('%d-%m-%Y') }}</td>
+                            <td>{{ item.contract.end_date.strftime('%d-%m-%Y') if item.contract.end_date else 'Vô thời hạn' }}</td>
+                            <td>{{ "{:,.0f}".format(item.contract.pay_rate) }} VNĐ</td>
+                            <td>
+                                {% if item.contract.pay_unit == 'month' %}
+                                    <span class="badge bg-info">Theo tháng</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Theo giờ</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.is_active %}
+                                    <span class="badge bg-success">Đang hiệu lực</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Hết hiệu lực</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('contract.edit_contract', contract_id=item.contract.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> Sửa
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                <i class="fas fa-info-circle me-2"></i>Nhân viên này chưa có hợp đồng nào.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #ddf5e4; /* Màu nền xám rất nhạt */
+    }
+
+    /* Phần Hero (Giới thiệu chính) */
+    .about-hero {
+        background: linear-gradient(135deg, #09ff00dc 0%, #00b339ce 100%);
+        color: white;
+        padding: 6rem 1rem;
+        text-align: center;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 4rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    .about-hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .about-hero p.lead {
+        font-size: 1.3rem;
+        font-weight: 300;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Phần Tính Năng */
+    .feature-section {
+        padding-bottom: 4rem;
+    }
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #343a40;
+        margin-bottom: 3rem;
+    }
+    .feature-card {
+        background-color: #ffffff;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        padding: 2.5rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    }
+    .feature-icon {
+        font-size: 3rem;
+        color: #00ffd9;
+        margin-bottom: 1.5rem;
+    }
+    .feature-card h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #0b4a29;
+        margin-bottom: 1rem;
+    }
+    .feature-card p {
+        color: #6c757d;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    .tech-stack-section {
+        background-color: #ffffff; /* Nền trắng */
+        padding: 4rem 1rem;
+        margin-top: 4rem;
+        border-radius: 30px;
+    }
+    .tech-icon {
+        font-size: 3rem;
+        color: #033d16; /* Màu xám đậm */
+        margin-bottom: 1rem;
+        transition: color 0.3s ease;
+    }
+    /* Nền tối (giữ nguyên từ code cũ của bạn) */
+    .roadmap-section {
+        background-color: #415047e1;
+        color: #f8f9fa;
+        padding: 4rem 1rem;
+        /* Bo tròn góc trên (giữ nguyên) */
+        border-radius: 30px 30px 0 0; 
+    }
+    .roadmap-section .section-title {
+        color: #ffffff;
+        margin-bottom: 4rem; /* Tăng khoảng cách */
+    }
+
+    /* CSS cho Lộ trình (Timeline) mới */
+    .timeline-wrapper {
+        position: relative;
+        padding-left: 50px; /* Không gian cho đường kẻ và icon */
+    }
+
+    /* Đường kẻ dọc của timeline */
+    .timeline-wrapper::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 10px;
+        bottom: 10px;
+        width: 4px;
+        background-color: #6aef56ad; /* Màu xanh chủ đạo */
+        border-radius: 2px;
+        opacity: 0.3;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 3rem; /* Khoảng cách giữa các mục */
+    }
+    
+    /* Vòng tròn Icon trên đường kẻ */
+    .timeline-icon {
+        position: absolute;
+        left: -50px; /* Đặt icon ra ngoài, căn giữa với đường kẻ */
+        top: 0;
+        transform: translateX(-50%); /* Căn giữa icon (có đường kính 50px) */
+        
+        width: 50px;
+        height: 50px;
+        background-color: #6aef56ad; /* Nền xanh */
+        color: #ffffff; /* Icon màu trắng */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 0 0 6px #495057; /* Vòng viền màu nền đậm hơn */
+    }
+    
+    .timeline-content {
+        padding-top: 5px; /* Căn chỉnh với icon */
+    }
+
+    .timeline-content h4 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+    }
+    
+    .timeline-content p {
+        font-size: 1.1rem;
+        color: #ced4da; /* Màu chữ xám nhạt */
+        line-height: 1.6;
+    }
+
+    /* Xóa đường kẻ ở mục cuối cùng */
+    .timeline-item:last-child::after {
+        display: none;
+    }
+    /* Thêm CSS này vào khối <style> chung */
+    .cta-section {
+        padding: 4rem 1rem;
+        text-align: center;
+        border-radius: 20px;
+    }
+    .cta-section h2 {
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .cta-section p {
+        font-size: 1.2rem;
+        color: #495057;
+        max-width: 600px;
+        margin: 0 auto 2rem auto;
+    }
+    .btn-github {
+        background-color: #343a40; /* Màu đen/xám của GitHub */
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 50px; /* Bo tròn */
+        transition: all 0.3s ease;
+    }
+    .btn-github:hover {
+        background-color: #23272b;
+        color: white;
+        transform: scale(1.05);
+    }
+
+</style>
+
+<div class="about-hero">
+    <div class="container">
+        <h1>Về Dự án của chúng tôi</h1>
+        <p class="lead">
+            Một giải pháp phần mềm giúp tự động hóa quy trình chấm công,
+            tính lương và quản lý nghỉ phép. Mang lại sự minh bạch, chính xác và
+            hiệu quả cho doanh nghiệp nhỏ.
+        </p>
+    </div>
+</div>
+
+<div class="container feature-section">
+    <h2 class="section-title">Tính năng nổi bật</h2>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card">
+                <i class="fas fa-clock feature-icon"></i>
+                <h3>Quản Lý Chấm Công</h3>
+                <p>
+                    Hệ thống ghi lại chính xác thời gian check-in và check-out
+                    của mỗi nhân viên. Quản lý có thể theo dõi lịch sử điểm danh
+                    toàn diện và xem thống kê trực quan.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card">
+                <i class="fas fa-calculator feature-icon"></i>
+                <h3>Tự Động Tính Lương</h3>
+                <p>
+                    Tự động tính toán lương hàng tháng dựa trên hợp đồng
+                    (lương cứng hoặc lương theo giờ) và dữ liệu chấm công.
+                    Tích hợp linh hoạt các khoản thưởng và khấu trừ.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card">
+                <i class="fas fa-calendar-check feature-icon"></i>
+                <h3>Quản Lý Nghỉ Phép</h3>
+                <p>
+                    Nhân viên có thể gửi đơn xin nghỉ phép trực tuyến. Quản lý
+                    nhận thông báo, xem xét lý do chi tiết và
+                    duyệt hoặc từ chối đơn một cách nhanh chóng.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card">
+                <i class="fas fa-tachometer-alt feature-icon"></i>
+                <h3>Trang Quản Trị Toàn Diện</h3>
+                <p>
+                    Bảng điều khiển trung tâm dành cho admin, cung cấp cái nhìn
+                    tổng quan về tỷ lệ điểm danh, tổng quỹ lương và các
+                    đơn xin nghỉ đang chờ xử lý.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card">
+                <i class="fas fa-bell feature-icon"></i>
+                <h3>Thông Báo Tức Thì</h3>
+                <p>
+                    Hệ thống thông báo tích hợp tự động
+                    cập nhật cho nhân viên khi đơn xin nghỉ của họ được
+                    duyệt hoặc từ chối, đảm bảo thông tin thông suốt.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card">
+                <i class="fas fa-search feature-icon"></i>
+                <h3>Hiệu Quả & Dễ Dùng</h3>
+                <p>
+                    Các trang lịch sử và báo cáo đều được trang bị tính năng
+                    phân trang và tìm kiếm, giúp xử lý khối lượng dữ liệu
+                    lớn mà không làm chậm hệ thống.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="tech-stack-section">
+    <div class="container">
+        <h2 class="section-title">Công Nghệ Sử Dụng</h2>
+        <div class="row text-center g-4">
+            <div class="col-md-3 col-sm-6">
+                <i class="fab fa-python tech-icon"></i>
+                <h4>Python & Flask</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fas fa-database tech-icon"></i>
+                <h4>SQLAlchemy</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fab fa-bootstrap tech-icon"></i>
+                <h4>Bootstrap 5</h4>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="fab fa-js-square tech-icon"></i>
+                <h4>JavaScript</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="roadmap-section">
+    <div class="container">
+        <h2 class="section-title">Định hướng phát triển</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+            
+                <div class="timeline-wrapper">
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Ứng Dụng Di Động</h4>
+                            <p>Phát triển ứng dụng gốc (native app) cho cả iOS và Android, cho phép nhân viên chấm công, xin nghỉ phép và nhận thông báo mọi lúc mọi nơi.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Thống Kê Nâng Cao</h4>
+                            <p>Xây dựng module báo cáo mạnh mẽ, cho phép quản lý lọc, phân tích và trực quan hóa dữ liệu (biểu đồ, đồ thị) về hiệu suất và chi phí lương.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Tích Hợp AI</h4>
+                            <p>Áp dụng trí tuệ nhân tạo để phân tích thói quen làm việc, dự đoán các rủi ro (ví dụ: nhân viên sắp nghỉ việc) và đề xuất các ca làm việc tối ưu.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container cta-section">
+    <h2 class="section-title">Khám Phá Dự Án</h2>
+    <p>Bạn quan tâm đến cách hệ thống này hoạt động? Toàn bộ mã nguồn của dự án đều được công khai. Hãy khám phá, đóng góp ý kiến hoặc báo lỗi!</p>
+    <a href="#" class="btn btn-github">
+        <i class="fab fa-github me-2"></i> Xem trên GitHub
+    </a>
+</div>
+{% endblock %}

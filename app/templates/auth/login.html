@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* 1. Thêm Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Kalam+Display:wght@700&family=Poppins:wght@400;500;600&display=swap');
+
+    /* Định nghĩa bảng màu Xanh Kem Nhạt */
+    :root {
+        --color-bg-light: #F8FDFB;
+        --color-bg-split: #EBF7F2;
+        --color-primary: #50B887;
+        --color-primary-hover: #45a075;
+        --color-text-dark: #222;
+        --color-text-muted: #6c757d;
+    }
+
+    body {
+        background-color: var(--color-bg-light);
+        /* Áp dụng font Poppins làm font mặc định */
+        font-family: 'Kalam', sans-serif; 
+    }
+
+    .login-container-fluid {
+        min-height: 100vh;
+    }
+
+    /* 2. Phần Branding (bên trái) - Đã cập nhật để tạo nghệ thuật */
+    .branding-side {
+        background-color: var(--color-bg-split);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+
+    .branding-content {
+        max-width: 500px; /* Tăng độ rộng để chứa nội dung nghệ thuật */
+        text-align: center; /* Căn giữa nội dung */
+        position: relative; /* Cho phép định vị các thành phần con */
+        padding: 2rem 0; /* Khoảng đệm trên dưới */
+    }
+
+    /* Hiệu ứng trích dẫn nghệ thuật */
+    .artistic-quote {
+        position: relative;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Dấu ngoặc kép lớn, mờ phía sau */
+    .artistic-quote::before {
+        content: '“'; /* Dấu ngoặc kép mở */
+        position: absolute;
+        top: -1.5rem; /* Điều chỉnh vị trí */
+        left: 50%;
+        transform: translateX(-50%); /* Căn giữa */
+        font-size: 10rem; /* Kích thước siêu lớn */
+        line-height: 1;
+        color: rgba(80, 184, 135, 0.1); /* Màu xanh mờ nhạt */
+        font-family: 'Playfair Display', serif;
+        z-index: 1; /* Nằm dưới văn bản */
+        pointer-events: none; /* Không tương tác với chuột */
+    }
+
+    /* Tiêu đề chính nghệ thuật */
+    .artistic-title {
+        font-family: 'Playfair Display', serif; /* Font nghệ thuật */
+        font-size: 2.8rem; /* Kích thước lớn hơn */
+        font-weight: 700;
+        color: var(--color-text-dark);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+        position: relative;
+        z-index: 2; /* Nằm trên dấu ngoặc kép */
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+    }
+
+    /* Đoạn mô tả nghệ thuật */
+    .artistic-description {
+        font-family: 'Poppins', sans-serif; /* Font hiện đại */
+        font-size: 1.2rem;
+        color: var(--color-text-muted); /* Màu xám tinh tế */
+        line-height: 1.6;
+        position: relative;
+        z-index: 2;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* === Phần Form (bên phải) - Giữ nguyên === */
+    .form-side {
+        background-color: var(--color-bg-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+    .form-wrapper {
+        width: 100%;
+        max-width: 400px;
+    }
+    .form-wrapper .form-label {
+        font-weight: 500;
+    }
+    .form-wrapper h2 {
+        font-weight: 700;
+        color: var(--color-text-dark);
+    }
+    .input-group-text {
+        background-color: #fff;
+        border-right: 0;
+        border-radius: 0.75rem 0 0 0.75rem;
+        border-color: #ddd;
+    }
+    .form-control {
+        border-left: 0;
+        border-radius: 0 0.75rem 0.75rem 0;
+        padding: 0.75rem;
+        border-color: #ddd;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: var(--color-primary);
+    }
+    .btn-login {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        font-weight: 600;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        width: 100%;
+    }
+    .btn-login:hover {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-hover);
+    }
+    .btn-social {
+        font-weight: 500;
+        border-radius: 0.5rem;
+        border: 1px solid #ddd;
+    }
+</style>
+
+<div class="container-fluid login-container-fluid p-0">
+    <div class="row g-0 h-100">
+        
+        <div class="col-md-6 d-none d-md-flex branding-side">
+            <div class="branding-content">
+                
+                <blockquote class="artistic-quote">
+                    <h1 class="artistic-title">Chào mừng trở lại!</h1>
+                    <p class="artistic-description">
+                        Quản lý kho hàng và dữ liệu của bạn một cách hiệu quả và thông minh.
+                    </p>
+                </blockquote>
+
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12 form-side">
+            <div class="form-wrapper">
+                
+                <div class="text-center mb-4">
+                    <h2>Đăng Nhập</h2>
+                    <p class="text-muted">Vui lòng nhập thông tin của bạn</p>
+                </div>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Tên đăng nhập:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end mb-4">
+                        <a href="#" class="form-text text-decoration-none" style="color: var(--color-primary);">
+                            Quên mật khẩu?
+                        </a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-login">Đăng Nhập</button>
+                    
+                    <div class="divider-text my-4" style="color: #aaa;">HOẶC</div>
+
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-light btn-social w-100">
+                            <i class="bi bi-google me-2"></i> Tiếp tục với Google
+                        </button>
+                       
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">Chưa có tài khoản? 
+                        <a href="#" class="fw-bold text-decoration-none" style="color: var(--color-primary);">
+                            Đăng ký ngay
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

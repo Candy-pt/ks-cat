@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Chỉnh sửa Chấm công - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Chỉnh sửa Chấm công</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Nhân viên:</strong> {{ user.username }}
+                </p>
+                <p class="card-text">
+                    <strong>Ngày:</strong> {{ attendance.date.strftime('%d-%m-%Y') }}
+                </p>
+                <hr>
+
+                <form method="POST" action="{{ url_for('attendance.edit_attendance', att_id=attendance.id) }}">
+                    
+                    <div class="mb-3">
+                        <label for="check_in" class="form-label">
+                            <i class="fas fa-sign-in-alt me-2"></i>Giờ Check-in
+                        </label>
+                        <input 
+                            type="datetime-local" 
+                            class="form-control" 
+                            id="check_in" 
+                            name="check_in"
+                            value="{{ attendance.check_in.strftime('%Y-%m-%dT%H:%M') if attendance.check_in else '' }}">
+                        <div class="form-text">Để trống nếu muốn xóa giờ check-in.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="check_out" class="form-label">
+                            <i class="fas fa-sign-out-alt me-2"></i>Giờ Check-out
+                        </label>
+                        <input 
+                            type="datetime-local" 
+                            class="form-control" 
+                            id="check_out" 
+                            name="check_out"
+                            value="{{ attendance.check_out.strftime('%Y-%m-%dT%H:%M') if attendance.check_out else '' }}">
+                        <div class="form-text">Để trống nếu muốn xóa giờ check-out.</div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ url_for('attendance.all_history') }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Lưu Thay Đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

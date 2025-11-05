@@ -1,0 +1,79 @@
+<div class="card admin-sidebar mt-4">
+    <div class="sidebar-header"><h5>Yêu cầu đang chờ</h5></div>
+    <ul class="list-group list-group-flush">
+        {% for leave, username in pending_leaves %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ username }}</strong><br>
+                <small class="text-muted">
+                    {% if leave.request_type == 'leave' %}
+                        Nghỉ: {{ leave.start_date.strftime('%d/%m') }} - {{ leave.end_date.strftime('%d/%m') }}
+                    {% elif leave.request_type in ['late', 'early'] %}
+                        {{ 'Đi trễ' if leave.request_type == 'late' else 'Về sớm' }}: {{ leave.request_date.strftime('%d/%m') }}
+                    {% elif leave.request_type == 'shift_change' %}
+                        Đổi ca
+                    {% endif %}
+                </small>
+            </div>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#leaveModal{{ leave.id }}">
+                Xem
+            </button>
+        </li>
+        {% else %}
+        <li class="list-group-item">
+            <span class="text-muted">Không có yêu cầu nào đang chờ.</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% for leave, username in pending_leaves %}
+<div class="modal fade" id="leaveModal{{ leave.id }}" tabindex="-1" aria-labelledby="leaveModalLabel{{ leave.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveModalLabel{{ leave.id }}">
+                    Duyệt yêu cầu của: <strong>{{ username }}</strong>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <strong>Loại yêu cầu:</strong>
+                    <span class="badge bg-info text-dark">
+                        {% if leave.request_type == 'leave' %} Nghỉ phép
+                        {% elif leave.request_type == 'late' %} Đi trễ
+                        {% elif leave.request_type == 'early' %} Về sớm
+                        {% elif leave.request_type == 'shift_change' %} Đổi ca
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if leave.request_type == 'leave' %}
+                    <div class="mb-3"><strong>Từ ngày:</strong> {{ leave.start_date.strftime('%d-%m-%Y') }}</div>
+                    <div class="mb-3"><strong>Đến hết ngày:</strong> {{ leave.end_date.strftime('%d-%m-%Y') }}</div>
+                {% elif leave.request_type in ['late', 'early'] %}
+                     <div class="mb-3"><strong>Ngày áp dụng:</strong> {{ leave.request_date.strftime('%d-%m-%Y') }}</div>
+                     {% if leave.request_time %}
+                     <div class="mb-3"><strong>Giờ dự kiến:</strong> {{ leave.request_time.strftime('%H:%M') }}</div>
+                     {% endif %}
+                {% endif %}
+
+                <hr>
+                <div class="mb-3">
+                    <strong>Lý do / Chi tiết:</strong>
+                    <p class="form-control-plaintext" style="white-space: pre-wrap; background-color: #f8f9fa; padding: 10px; border-radius: 5px;">{{ leave.reason }}</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="{{ url_for('leave.process_request', request_id=leave.id) }}" style="display: inline;">
+                    <button type="submit" name="action" value="rejected" class="btn btn-danger"> <i class="fas fa-times"></i> Từ chối </button>
+                </form>
+                <form method="POST" action="{{ url_for('leave.process_request', request_id=leave.id) }}" style="display: inline;">
+                    <button type="submit" name="action" value="approved" class="btn btn-success"> <i class="fas fa-check"></i> Duyệt </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

@@ -1,0 +1,211 @@
+    /* Định nghĩa bảng màu Xanh Kem Nhạt */
+    :root {
+        --color-bg-light: #F8FDFB;       /* Màu kem/nền rất nhạt */
+        --color-bg-split: #EBF7F2;       /* Màu xanh kem cho phần branding */
+        --color-primary: #50B887;      /* Màu xanh lá cây (mint) chính cho nút */
+        --color-primary-hover: #45a075; /* Màu xanh lá đậm hơn khi hover */
+        --color-text-dark: #222;
+        --color-text-muted: #6c757d;
+    }
+
+    body {
+        background-color: var(--color-bg-light);
+    }
+
+    /* Thiết lập cho toàn bộ khung */
+    .login-container-fluid {
+        min-height: 100vh;
+    }
+
+    /* 2. Phần Form (bên phải) */
+    .form-side {
+        background-color: var(--color-bg-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+    .form-wrapper {
+        width: 100%;
+        max-width: 400px; /* Giới hạn độ rộng của form */
+    }
+    
+    .form-wrapper .form-label {
+        font-weight: 500;
+    }
+
+    .form-wrapper h2 {
+        font-weight: 700;
+        color: var(--color-text-dark);
+    }
+    
+    /* Tùy chỉnh input-group với icon */
+    .input-group-text {
+        background-color: #fff;
+        border-right: 0;
+        border-radius: 0.75rem 0 0 0.75rem;
+        border-color: #ddd;
+    }
+    .form-control {
+        border-left: 0;
+        border-radius: 0 0.75rem 0.75rem 0;
+        padding: 0.75rem;
+        border-color: #ddd;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: var(--color-primary);
+    }
+
+    /* Tùy chỉnh nút "Đăng Nhập" */
+    .btn-login {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        font-weight: 600;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        width: 100%;
+    }
+    .btn-login:hover {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-hover);
+    }
+
+    /* Nút đăng nhập social */
+    .btn-social {
+        font-weight: 500;
+        border-radius: 0.5rem;
+        border: 1px solid #ddd;
+    }
+
+/* 1. Thêm Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap');
+
+    /* Định nghĩa bảng màu Xanh Kem Nhạt (giữ nguyên) */
+    :root {
+        --color-bg-light: #F8FDFB;
+        --color-bg-split: #EBF7F2;
+        --color-primary: #50B887;
+        --color-primary-hover: #45a075;
+        --color-text-dark: #222;
+        --color-text-muted: #6c757d;
+    }
+
+    body {
+        background-color: var(--color-bg-light);
+        /* 2. Áp dụng font chữ Poppins cho toàn trang */
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .login-container-fluid {
+        min-height: 100vh;
+    }
+
+    /* 3. Cập nhật phần Branding (bên trái) */
+    .branding-side {
+        background-color: var(--color-bg-split);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+    
+    /* 4. Đây là phần "nghệ thuật" mới */
+    .branding-content {
+        max-width: 500px; /* Tăng độ rộng để chứa quote */
+    }
+
+    .artistic-quote {
+        position: relative; /* Cần thiết để định vị dấu ngoặc kép */
+        padding-left: 3rem;
+        /* Đường kẻ dọc tinh tế */
+        border-left: 4px solid var(--color-primary); 
+    }
+
+    /* Dấu ngoặc kép mờ khổng lồ */
+    .artistic-quote::before {
+        content: '“'; /* Dấu ngoặc kép trái */
+        position: absolute;
+        top: -2.5rem;
+        left: -1rem;
+        font-size: 8rem; /* Kích thước siêu lớn */
+        line-height: 1;
+        /* Màu xanh mờ, lấy từ màu chính */
+        color: rgba(80, 184, 135, 0.2); 
+        font-family: 'Playfair Display', serif;
+        z-index: 1; /* Nằm dưới văn bản */
+    }
+
+    .quote-text {
+        /* Dùng font nghệ thuật */
+        font-family: 'Playfair Display', serif; 
+        font-size: 2.25rem; /* Tăng kích thước chữ */
+        font-weight: 700;
+        color: var(--color-text-dark);
+        line-height: 1.4;
+        position: relative; /* Nằm trên dấu ngoặc kép */
+        z-index: 2;
+    }
+
+    .quote-footer {
+        font-size: 1.1rem;
+        font-family: 'Poppins', sans-serif; /* Quay lại font Poppins */
+        color: var(--color-primary); /* Dùng màu nhấn */
+        font-weight: 500;
+        margin-top: 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* === Phần Form (bên phải) - Giữ nguyên === */
+    .form-side {
+        background-color: var(--color-bg-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+    }
+    .form-wrapper {
+        width: 100%;
+        max-width: 400px;
+    }
+    .form-wrapper .form-label {
+        font-weight: 500;
+    }
+    .form-wrapper h2 {
+        font-weight: 700;
+        color: var(--color-text-dark);
+    }
+    .input-group-text {
+        background-color: #fff;
+        border-right: 0;
+        border-radius: 0.75rem 0 0 0.75rem;
+        border-color: #ddd;
+    }
+    .form-control {
+        border-left: 0;
+        border-radius: 0 0.75rem 0.75rem 0;
+        padding: 0.75rem;
+        border-color: #ddd;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: var(--color-primary);
+    }
+    .btn-login {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        font-weight: 600;
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        width: 100%;
+    }
+    .btn-login:hover {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-hover);
+    }
+    .btn-social {
+        font-weight: 500;
+        border-radius: 0.5rem;
+        border: 1px solid #ddd;
+    }

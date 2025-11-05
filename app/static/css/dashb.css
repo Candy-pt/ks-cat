@@ -1,0 +1,80 @@
+    .attendance-action-card {
+        /* Bo tròn và đổ bóng "nổi bật" */
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: none;
+        overflow: hidden; /* Đảm bảo header bo tròn */
+    }
+
+    .attendance-action-card .card-header {
+        background-color: #1eaf34e0; /* Màu nền header nhẹ nhàng */
+        border-bottom: 1px solid #dee2e6;
+        padding: 1rem 1.5rem;
+    }
+    
+    .attendance-action-card .card-body {
+        padding: 2rem; /* Tăng khoảng đệm */
+    }
+
+    /* CSS cho mỗi ô (Giờ vào / Giờ ra) */
+    .attendance-box {
+        background-color: #f8f9fa; /* Nền xám nhạt */
+        border: 2px dashed #ced4da;  /* Viền xám mờ */
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+    }
+
+    .attendance-box .box-icon {
+        font-size: 2.5rem;
+        color: #ced4da; /* Màu icon xám mờ */
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .attendance-box h5 {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .attendance-box .box-status-time {
+        font-size: 1.75rem; /* Làm giờ check-in/out NỔI BẬT */
+        font-weight: 700;
+        color: #28a745; /* Màu xanh lá */
+        margin-bottom: 0.25rem;
+    }
+    
+    .attendance-box .box-status-time.check-out {
+        color: #dc3545; /* Màu đỏ */
+    }
+
+    /* Trạng thái "Đã Hoàn Thành" (khi đã check-in hoặc check-out)
+    */
+    .attendance-box.is-complete {
+        background-color: #e6f7ff; /* Nền xanh dương nhạt */
+        border-color: #007bff;     /* Viền xanh dương */
+    }
+    .attendance-box.is-complete .box-icon {
+        color: #007bff; /* Icon màu xanh */
+    }
+    .attendance-box.is-complete .box-status-complete {
+        font-weight: 500;
+        color: #007bff; /* Chữ màu xanh */
+    }
+
+    /* Căn chỉnh nút cho đẹp */
+    .attendance-box .btn {
+        width: 100%; /* Nút chiếm 100% chiều rộng */
+        font-weight: 600;
+    }
+    
+    /* Căn chỉnh phần footer (thanh progress hoặc alert) */
+    .attendance-footer {
+        padding: 0 1rem; /* Căn lề cho khớp với các box */
+    }

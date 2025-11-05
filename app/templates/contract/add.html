@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Thêm Hợp đồng - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h3 class="card-title mb-0">Tạo Hợp đồng mới cho: {{ user.username }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Ngày bắt đầu hiệu lực</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="pay_rate" class="form-label">Mức lương (VNĐ)</label>
+                        <input type="number" class="form-control" id="pay_rate" name="pay_rate" placeholder="Ví dụ: 8000000 hoặc 25000" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Đơn vị lương</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_unit" id="unit_month" value="month" checked>
+                            <label class="form-check-label" for="unit_month">
+                                Trả lương theo tháng
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pay_unit" id="unit_hour" value="hour">
+                            <label class="form-check-label" for="unit_hour">
+                                Trả lương theo giờ
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr>
+                    
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ url_for('contract.list_contracts', user_id=user.id) }}" class="btn btn-secondary me-2">
+                            <i class="fas fa-times me-2"></i>Hủy
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Tạo Hợp đồng
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

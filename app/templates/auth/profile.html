@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <div class="card data-bs-theme="dark" style="background-color: #343a40; color: #f8f9fa; border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="row">
+
+                        <div class="col-md-4 text-center d-flex flex-column align-items-center">
+                            <img src="{{ url_for('static', filename='uploads/' + user.avatar_image) }}" 
+                                 alt="Avatar" 
+                                 class="img-fluid rounded-circle mb-3" 
+                                 style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #495057;">
+                            
+                            <h4 class="fw-bold">{{ user.full_name or user.username }}</h4>
+                            
+                            <p class="text-white-50">
+                                Tham gia: {{ user.created_at.strftime('%d/%m/%Y') }}
+                            </p>
+                        </div>
+
+                        <div class="col-md-8">
+                            <h2 class="fw-bold mb-4">THÔNG TIN TÀI KHOẢN</h2>
+
+                            <form method="POST" action="{{ url_for('user.profile') }}" enctype="multipart/form-data">
+                                
+                                <div class="row mb-3">
+                                    <label for="email" class="col-sm-3 col-form-label">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" id="email" name="email" 
+                                               value="{{ user.email or '' }}" 
+                                               placeholder="-- Chưa cung cấp --">
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <label for="username" class="col-sm-3 col-form-label">Tài khoản</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username or '' }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="full_name" class="col-sm-3 col-form-label">Họ tên</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="full_name" name="full_name" 
+                                               value="{{ user.full_name or '' }}"
+                                               placeholder="-- Chưa cung cấp --">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Giới tính</label>
+                                    <div class="col-sm-9 d-flex align-items-center">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_nam" value="Nam" {% if user.gender == 'Nam' %}checked{% endif %}>
+                                            <label class="form-check-label" for="gender_nam">Nam</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_nu" value="Nữ" {% if user.gender == 'Nữ' %}checked{% endif %}>
+                                            <label class="form-check-label" for="gender_nu">Nữ</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_khac" value="Không xác định" {% if user.gender == 'Không xác định' or not user.gender %}checked{% endif %}>
+                                            <label class="form-check-label" for="gender_khac">Không xác định</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="password" class="col-sm-3 col-form-label">Mật khẩu</label>
+                                    <div class="col-sm-9">
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Để trống nếu không muốn đổi">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="avatar" class="col-sm-3 col-form-label">Avatar</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="file" id="avatar" name="avatar">
+                                        <div class="form-text" style="color: #adb5bd;">(Ảnh nhỏ hơn 5MB)</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-end mt-4">
+                                    <button type="submit" class="btn btn-warning btn-lg fw-bold">CẬP NHẬT</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

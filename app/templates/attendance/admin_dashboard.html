@@ -1,0 +1,101 @@
+<!-- admin.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <!-- Sidebar (Desktop) -->
+    <div class="col-md-3">
+        <div class="card admin-sidebar">
+            <div class="sidebar-header"><h5>Menu Quản Lý</h5></div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item report-item"><a href="{{ url_for('employee.add_employee') }}"><i class="fas fa-user-plus"></i> Thêm Nhân Viên</a></li>
+                <li class="list-group-item report-item"><a href="{{ url_for('attendance.all_history') }}"><i class="fas fa-history"></i> Bảng công </a></li>
+                <li class="list-group-item report-item"><a href="{{ url_for('payroll.salary_page') }}"><i class="fas fa-calculator"></i> Tính Lương</a></li>
+                <li class="list-group-item report-item"><a href="{{ url_for('payroll.salary_page') }}"><i class="fa-solid fa-chart-bar"></i> Thống kê </a></li>
+
+                <!-- <li class="list-group-item report-item"><a href="{{ url_for('payroll.salary_report_detailed') }}"><i class="fas fa-file-alt"></i> Báo Cáo Chi Tiết Theo Tháng</a></li> -->
+            </ul>
+        </div>
+        
+            <!-- các yêu cầu đang chờ duyệt -->
+            <ul class="list-group list-group-flush">
+                {% include 'attendance/leave.html' %}
+            </ul>
+        
+
+    </div>
+    <!-- Main Content -->
+    <div class="col-md-9">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card bg-primary text-white">
+                    <h3>{{ users|length }}</h3>
+                    <p>Tổng nhân viên</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card bg-success text-white">
+                    <h3>{{ attendance_rate }}%</h3>
+                    <p>Tỷ lệ điểm danh hôm nay</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card bg-info text-white">
+                    <h3>{{ total_salary }} VNĐ</h3>
+                    <p>Tổng lương tháng này</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Nhân Viên -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-users"></i> Danh Sách Nhân Viên</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead><tr><th>ID</th><th>Tên Đăng Nhập</th><th>Thao Tác</th></tr></thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>
+                                <a href="{{ url_for('employee.edit_employee', user_id=user.id) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Sửa</a>
+                               <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ user.id }}">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </button>
+                                <a href="{{ url_for('contract.list_contracts', user_id=user.id) }}" class="btn btn-sm btn-info"><i class="fas fa-file-contract"></i> Hợp đồng</a>
+
+                                <div class="modal fade" id="deleteModal-{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ user.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel-{{ user.id }}">Xác nhận Xóa Nhân viên</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bạn có chắc chắn muốn xóa vĩnh viễn nhân viên <strong>{{ user.username }}</strong>?
+                                                <p class="text-danger mt-2">Hành động này không thể hoàn tác.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                
+                                                <form action="{{ url_for('employee.delete_employee', user_id=user.id) }}" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-danger">Chắc chắn Xóa</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

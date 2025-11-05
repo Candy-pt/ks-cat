@@ -1,0 +1,29 @@
+<!-- edit-employee.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3><i class="fas fa-user-edit"></i> Sửa Nhân Viên: {{ user.username }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Tên đăng nhập:</label>
+                        <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu mới (để trống nếu không đổi):</label>
+                        <input type="password" class="form-control" name="password">
+                    </div>
+                   
+                    <button type="submit" class="btn btn-primary w-100">Cập Nhật</button>
+                </form>
+                <a href="{{ url_for('attendance.dashboard') }}" class="btn btn-secondary w-100 mt-2">Quay Lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
