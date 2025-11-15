@@ -3,8 +3,13 @@ __pycache__/
 *.pyc
 
 # Thư mục môi trường ảo (Rất quan trọng!)
-diemdanh/
-.diemdanh/
+venv/
+.venv/
+env/
+
+# File biến môi trường (Chứa mật khẩu, API key)
+.env
+*.env
 
 # Các thư mục của IDE (như VSCode, PyCharm)
 .vscode/
