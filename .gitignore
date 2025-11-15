@@ -1,0 +1,16 @@
+# Thư mục cache của Python
+__pycache__/
+*.pyc
+
+# Thư mục môi trường ảo (Rất quan trọng!)
+venv/
+.venv/
+env/
+
+
+# Các thư mục của IDE (như VSCode, PyCharm)
+.vscode/
+.idea/
+
+generate_fake_data.py
+seed_attendance.py
