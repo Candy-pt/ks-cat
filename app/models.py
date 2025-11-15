@@ -6,13 +6,13 @@ db = SQLAlchemy()
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(256), nullable=False) 
+    password = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(20), default='employee')
     email = db.Column(db.String(120), unique=True, nullable=True)
     full_name = db.Column(db.String(100), nullable=True)
-    gender = db.Column(db.String(20), nullable=True) 
+    gender = db.Column(db.String(20), nullable=True)
     avatar_image = db.Column(db.String(200), nullable=False, default='default-avatar.png')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow) 
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     fcm_token = db.Column(db.String(200))
 
        # Mối quan hệ: Một User có nhiều bản ghi liên quan
@@ -25,7 +25,7 @@ class User(db.Model):
     leave_requests = db.relationship('LeaveRequest', backref='user', lazy=True, cascade="all, delete-orphan")
 
 
-# Bảng Hợp đồng 
+# Bảng Hợp đồng
 class Contract(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -34,7 +34,7 @@ class Contract(db.Model):
     pay_rate = db.Column(db.Float, nullable=False) # 6,000,000 hoặc 20,000
     pay_unit = db.Column(db.String(20), default='month') # 'month' hoặc 'hour'
 
-# Bảng Chấm công 
+# Bảng Chấm công
 class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -44,6 +44,7 @@ class Attendance(db.Model):
     image_path = db.Column(db.String(200))
     gps_lat = db.Column(db.Float)
     gps_lng = db.Column(db.Float)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('schedule.id'), nullable=True)  # Thêm khóa ngoại tới Schedule
 
 # Bảng Thưởng
 class Bonus(db.Model):
@@ -55,7 +56,7 @@ class Bonus(db.Model):
     reason = db.Column(db.String(100))
 
 
-# các khoản khấu trừ 
+# các khoản khấu trừ
 class Deduction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -64,7 +65,7 @@ class Deduction(db.Model):
     amount = db.Column(db.Float, nullable=False)
     reason = db.Column(db.String(100))
 
-# Bảng lưu kết quả lương hàng tháng 
+# Bảng lưu kết quả lương hàng tháng
 class Payroll(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -81,7 +82,7 @@ class SalarySettings(db.Model):
     standard_work_hours_per_day = db.Column(db.Float, default=8)
     standard_work_days_per_month = db.Column(db.Integer, default=24)
     late_penalty_amount = db.Column(db.Float, default=50000)
-    
+
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -93,27 +94,56 @@ class Notification(db.Model):
 
     def __repr__(self):
         return f'<Notification {self.id} for user {self.user_id}>'
-    
+
 
 class LeaveRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # Loại yêu cầu: 'leave', 'late', 'early', 'shift_change'
-    request_type = db.Column(db.String(20), nullable=False, default='leave') 
+    request_type = db.Column(db.String(20), nullable=False, default='leave')
     # Dùng cho 'leave' (nghỉ phép)
-    start_date = db.Column(db.Date) 
-    end_date = db.Column(db.Date)   
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
     # Dùng cho 'late', 'early'
-    request_date = db.Column(db.Date) 
-    request_time = db.Column(db.Time) 
+    request_date = db.Column(db.Date)
+    request_time = db.Column(db.Time)
     # Dùng cho 'shift_change' và lý do chung
     reason = db.Column(db.String(200), nullable=False) # Lý do chung/chi tiết đổi ca
-    
+
     status = db.Column(db.String(20), default='pending') # 'pending', 'approved', 'rejected'
-    
+
     # (Thêm mối quan hệ với Notification nếu bạn có)
     notifications = db.relationship('Notification', backref='leave_request', lazy=True)
 
     @property
     def relevant_date(self):
         return self.request_date if self.request_type in ['late', 'early'] else self.start_date
+
+# Bảng Ca làm việc (Shifts) - Bảng mẫu định nghĩa các ca làm việc
+class Shift(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)  # Tên ca, ví dụ: "Ca Sáng Part-time", "Ca Tối", "Hành chính Full-time"
+    start_time = db.Column(db.Time, nullable=False)  # Giờ bắt đầu, ví dụ: 08:00:00
+    end_time = db.Column(db.Time, nullable=False)    # Giờ kết thúc, ví dụ: 12:00:00
+
+    # Mối quan hệ: Một Shift có nhiều Schedule
+    schedules = db.relationship('Schedule', backref='shift', lazy=True, cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f'<Shift {self.name} ({self.start_time} - {self.end_time})>'
+
+# Bảng Lịch làm việc (Schedule) - Bảng phân công ca làm việc cho nhân viên
+class Schedule(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Khóa ngoại tới User
+    shift_id = db.Column(db.Integer, db.ForeignKey('shift.id'), nullable=False)  # Khóa ngoại tới Shift
+    date = db.Column(db.Date, nullable=False)  # Ngày làm việc
+
+    # Mối quan hệ: Một Schedule có nhiều Attendance
+    attendances = db.relationship('Attendance', backref='schedule', lazy=True)
+
+    # Đảm bảo không trùng lặp: một user không thể có 2 schedule trong cùng ngày
+    __table_args__ = (db.UniqueConstraint('user_id', 'date', name='_user_date_uc'),)
+
+    def __repr__(self):
+        return f'<Schedule User {self.user_id} - Shift {self.shift_id} on {self.date}>'

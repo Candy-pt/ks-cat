@@ -1,9 +1,18 @@
 function updateTime() {
-    const now = new Date();
-    document.getElementById('time').innerHTML = 'Thời gian hiện tại: ' + now.toLocaleString('vi-VN');
+    const timeElement = document.getElementById('time');
+    
+    if (timeElement) { 
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('vi-VN');
+        const dateString = now.toLocaleDateString('vi-VN');
+        timeElement.innerHTML = `Thời gian hiện tại: ${timeString} ${dateString}`;
+    }
 }
-setInterval(updateTime, 1000);
-updateTime();
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateTime();
+    setInterval(updateTime, 1000);
+});
 
 // Thêm: Tạo hidden input với thời gian local khi submit check-in/out
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Thêm Ca mới{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Thêm Ca làm việc mới</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên Ca (ví dụ: "Ca Sáng", "Ca Tối")</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start_time" class="form-label">Giờ bắt đầu (HH:MM)</label>
+                        <input type="time" class="form-control" id="start_time" name="start_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_time" class="form-label">Giờ kết thúc (HH:MM)</label>
+                        <input type="time" class="form-control" id="end_time" name="end_time" required>
+                    </div>
+                    <a href="{{ url_for('schedule.manage_shifts') }}" class="btn btn-secondary">Hủy</a>
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

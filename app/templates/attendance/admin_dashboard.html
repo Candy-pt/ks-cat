@@ -11,91 +11,247 @@
                 <li class="list-group-item report-item"><a href="{{ url_for('employee.add_employee') }}"><i class="fas fa-user-plus"></i> Thêm Nhân Viên</a></li>
                 <li class="list-group-item report-item"><a href="{{ url_for('attendance.all_history') }}"><i class="fas fa-history"></i> Bảng công </a></li>
                 <li class="list-group-item report-item"><a href="{{ url_for('payroll.salary_page') }}"><i class="fas fa-calculator"></i> Tính Lương</a></li>
-                <li class="list-group-item report-item"><a href="{{ url_for('payroll.salary_page') }}"><i class="fa-solid fa-chart-bar"></i> Thống kê </a></li>
+                <li class="list-group-item report-item"><a href="{{ url_for('schedule.calendar') }}"><i class="fa-solid fa-chart-bar"></i> Ca làm việc </a></li>
 
                 <!-- <li class="list-group-item report-item"><a href="{{ url_for('payroll.salary_report_detailed') }}"><i class="fas fa-file-alt"></i> Báo Cáo Chi Tiết Theo Tháng</a></li> -->
             </ul>
         </div>
-        
+
             <!-- các yêu cầu đang chờ duyệt -->
             <ul class="list-group list-group-flush">
                 {% include 'attendance/leave.html' %}
             </ul>
-        
+
 
     </div>
     <!-- Main Content -->
     <div class="col-md-9">
-        <!-- Stats Cards -->
-        <div class="row mb-4">
+        <!-- Stats Cards Section -->
+        <div class="row mb-3">
             <div class="col-md-4">
                 <div class="card stats-card bg-primary text-white">
-                    <h3>{{ users|length }}</h3>
-                    <p>Tổng nhân viên</p>
+                    <div class="card-body">
+                        <h3>{{ users|length }}</h3>
+                        <p>Tổng nhân viên</p>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card stats-card bg-success text-white">
-                    <h3>{{ attendance_rate }}%</h3>
-                    <p>Tỷ lệ điểm danh hôm nay</p>
+                    <div class="card-body">
+                        <h3>{{ attendance_rate }}%</h3>
+                        <p>Tỷ lệ điểm danh hôm nay</p>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card stats-card bg-info text-white">
-                    <h3>{{ total_salary }} VNĐ</h3>
-                    <p>Tổng lương tháng này</p>
+                    <div class="card-body">
+                         <h3>{{ total_salary }} VNĐ</h3>
+                        <p>Tổng lương tháng này</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div>  <hr><br>
 
-        <!-- Table Nhân Viên -->
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="fas fa-users"></i> Danh Sách Nhân Viên</h5>
+        <!-- Charts Section -->
+        <div class="row mb-4">
+            <!-- Biểu đồ xu hướng tỷ lệ điểm danh -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6><i class="fas fa-chart-line"></i> Xu hướng tỷ lệ điểm danh (6 tháng)</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="attendanceTrendChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead><tr><th>ID</th><th>Tên Đăng Nhập</th><th>Thao Tác</th></tr></thead>
-                    <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>
-                                <a href="{{ url_for('employee.edit_employee', user_id=user.id) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Sửa</a>
-                               <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ user.id }}">
-                                    <i class="fas fa-trash"></i> Xóa
-                                </button>
-                                <a href="{{ url_for('contract.list_contracts', user_id=user.id) }}" class="btn btn-sm btn-info"><i class="fas fa-file-contract"></i> Hợp đồng</a>
 
-                                <div class="modal fade" id="deleteModal-{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ user.id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="deleteModalLabel-{{ user.id }}">Xác nhận Xóa Nhân viên</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Bạn có chắc chắn muốn xóa vĩnh viễn nhân viên <strong>{{ user.username }}</strong>?
-                                                <p class="text-danger mt-2">Hành động này không thể hoàn tác.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                
-                                                <form action="{{ url_for('employee.delete_employee', user_id=user.id) }}" method="POST" class="d-inline">
-                                                    <button type="submit" class="btn btn-danger">Chắc chắn Xóa</button>
-                                                </form>
+            <!-- Biểu đồ phân bố giờ làm việc -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6><i class="fas fa-chart-bar"></i> Phân bố giờ làm việc</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="workHoursChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ trạng thái điểm danh hôm nay -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6><i class="fas fa-chart-pie"></i> Trạng thái điểm danh hôm nay</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="attendanceStatusChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ trạng thái đơn xin nghỉ -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h6><i class="fas fa-chart-doughnut"></i> Trạng thái đơn xin nghỉ</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="leaveStatusChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>  <hr><br>
+
+            <!-- Table Nhân Viên -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-users"></i> Danh Sách Nhân Viên</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead><tr><th>ID</th><th>Tên Đăng Nhập</th><th>Thao Tác</th></tr></thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>
+                                    <a href="{{ url_for('employee.edit_employee', user_id=user.id) }}" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Sửa</a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ user.id }}">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                    <a href="{{ url_for('contract.list_contracts', user_id=user.id) }}" class="btn btn-sm btn-info"><i class="fas fa-file-contract"></i> Hợp đồng</a>
+
+                                    <div class="modal fade" id="deleteModal-{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ user.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="deleteModalLabel-{{ user.id }}">Xác nhận Xóa Nhân viên</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc chắn muốn xóa vĩnh viễn nhân viên <strong>{{ user.username }}</strong>?
+                                                    <p class="text-danger mt-2">Hành động này không thể hoàn tác.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    
+                                                    <form action="{{ url_for('employee.delete_employee', user_id=user.id) }}" method="POST" class="d-inline">
+                                                        <button type="submit" class="btn btn-danger">Chắc chắn Xóa</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Biểu đồ xu hướng tỷ lệ điểm danh
+    const attendanceTrendCtx = document.getElementById('attendanceTrendChart').getContext('2d');
+    const attendanceTrendData = {{ attendance_trend|tojson }};
+    new Chart(attendanceTrendCtx, {
+        type: 'line',
+        data: {
+            labels: Object.keys(attendanceTrendData),
+            datasets: [{
+                label: 'Tỷ lệ điểm danh (%)',
+                data: Object.values(attendanceTrendData),
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+
+    // Biểu đồ trạng thái điểm danh hôm nay
+    const attendanceStatusCtx = document.getElementById('attendanceStatusChart').getContext('2d');
+    const attendanceStatusData = {{ attendance_status|tojson }};
+    new Chart(attendanceStatusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Đã điểm danh', 'Đang làm việc', 'Chưa điểm danh'],
+            datasets: [{
+                data: [attendanceStatusData.checked_in, attendanceStatusData.still_working, attendanceStatusData.not_checked_in],
+                backgroundColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(255, 99, 132)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Biểu đồ trạng thái đơn xin nghỉ
+    const leaveStatusCtx = document.getElementById('leaveStatusChart').getContext('2d');
+    const leaveStatusData = {{ leave_status|tojson }};
+    new Chart(leaveStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Chờ duyệt', 'Đã duyệt', 'Từ chối'],
+            datasets: [{
+                data: [leaveStatusData.pending, leaveStatusData.approved, leaveStatusData.rejected],
+                backgroundColor: [
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(255, 99, 132)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Biểu đồ phân bố giờ làm việc
+    const workHoursCtx = document.getElementById('workHoursChart').getContext('2d');
+    const hoursBinsData = {{ hours_bins|tojson }};
+    new Chart(workHoursCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(hoursBinsData),
+            datasets: [{
+                label: 'Số nhân viên',
+                data: Object.values(hoursBinsData),
+                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

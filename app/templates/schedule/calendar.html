@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Xếp lịch làm việc{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                Xếp lịch (3 ngày): {{ display_days[0].strftime('%d/%m') }} - {{ display_days[-1].strftime('%d/%m/%Y') }}
+            </h4>
+            <div>
+                <a href="{{ url_for('schedule.manage_shifts') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-cog"></i> Quản lý Ca
+                </a>
+                <button id="prev-3-days" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-chevron-left"></i> 3 ngày trước
+                </button>
+                <button id="next-3-days" class="btn btn-outline-secondary btn-sm">
+                    3 ngày sau <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="schedule-grid">
+                {% for day in display_days %}
+                <div class="day-column">
+                    <div class="day-header bg-dark text-white p-2 text-center">
+                        <h5>{{ day.strftime('%a, %d/%m') }}</h5>
+                    </div>
+                    
+                    {% for shift in shifts %}
+                    <div class="shift-card">
+                        <div class="shift-header bg-light p-2">
+                            <strong>{{ shift.name }}</strong>
+                            <small class="text-muted">({{ shift.start_time.strftime('%H:%M') }} - {{ shift.end_time.strftime('%H:%M') }})</small>
+                        </div>
+                        <div class="shift-body p-2">
+                            <div class="pill-container">
+                                {% for user in schedules_data[day][shift.id] %}
+                                <div class="schedule-item">
+                                    <span>{{ user.username }}</span>
+                                    <button type="button" class="remove-employee"
+                                            data-user-id="{{ user.id }}"
+                                            data-date="{{ day.strftime('%Y-%m-%d') }}">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <button class="btn btn-outline-success btn-sm w-100 add-employee-btn"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#addEmployeeModal"
+                                    data-date="{{ day.strftime('%Y-%m-%d') }}"
+                                    data-shift-id="{{ shift.id }}">
+                                + Thêm nhân viên
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addEmployeeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chọn nhân viên để thêm vào ca</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label for="employee-select" class="form-label">Nhân viên:</label>
+                <select class="form-select" id="employee-select">
+                    <option value="">-- Chọn nhân viên --</option>
+                    {% for emp in employees %}
+                    <option value="{{ emp.id }}">{{ emp.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="save-schedule">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-left: 1px solid #dee2e6;
+}
+.day-column {
+    border-right: 1px solid #dee2e6;
+}
+.shift-card {
+    border-bottom: 1px solid #eee;
+}
+.shift-body {
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start; /* Quan trọng: Giúp viên thuốc co lại */
+}
+.pill-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.schedule-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; 
+    background-color: transparent;
+    border: 1px solid transparent; 
+    border-radius: 12px;
+    padding: 4px 6px 4px 10px; 
+    font-size: 0.9em;
+    max-width: 100%;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.schedule-item:hover {
+    background-color: #e3f2fd; 
+    border-color: #2196f3;
+}
+.schedule-item span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.remove-employee {
+    background: none; border: none; padding: 0; margin: 0;
+    cursor: pointer;
+    color: #E74C3C;
+    font-size: 1.1em;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+.remove-employee:hover {
+    opacity: 1; 
+    color: #c0392b;
+}
+.add-employee-btn {
+    margin-top: auto; /* Đẩy nút '+' xuống cuối */
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentShiftId = null;
+    let currentDate = null;
+
+    // 1. Xử lý khi bấm nút "Thêm Nhân viên"
+    document.querySelectorAll('.add-employee-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            currentShiftId = this.dataset.shiftId;
+            currentDate = this.dataset.date;
+            document.getElementById('employee-select').value = "";
+        });
+    });
+
+    // 2. Xử lý khi bấm nút "Lưu" trên Modal
+    document.getElementById('save-schedule').addEventListener('click', function() {
+        const employeeId = document.getElementById('employee-select').value;
+        if (!employeeId) {
+            alert('Vui lòng chọn một nhân viên.');
+            return;
+        }
+        callUpdateSchedule(employeeId, currentShiftId, currentDate);
+    });
+
+    // 3. Xử lý khi bấm nút "Xóa" (x)
+    document.querySelectorAll('.remove-employee').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation(); // Ngăn modal mở ra
+            if (!confirm('Bạn có chắc chắn muốn xóa nhân viên này khỏi ca?')) {
+                return;
+            }
+            const employeeId = this.dataset.userId;
+            const date = this.dataset.date;
+            callUpdateSchedule(employeeId, null, date); // Gửi shift_id=null để xóa
+        });
+    });
+
+    // Hàm gọi API
+    function callUpdateSchedule(userId, shiftId, date) {
+        fetch('{{ url_for("schedule.update_schedule") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                shift_id: shiftId,
+                date: date
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Có lỗi xảy ra: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // 4. Xử lý phân trang (3 ngày)
+    const url = new URL(window.location);
+    const currentStart = new Date('{{ display_days[0].strftime("%Y-%m-%d") }}T00:00:00');
+
+    document.getElementById('prev-3-days').addEventListener('click', function() {
+        currentStart.setDate(currentStart.getDate() - 3);
+        url.searchParams.set('start_date', currentStart.toISOString().split('T')[0]);
+        window.location.href = url.toString();
+    });
+
+    document.getElementById('next-3-days').addEventListener('click', function() {
+        currentStart.setDate(currentStart.getDate() + 3);
+        url.searchParams.set('start_date', currentStart.toISOString().split('T')[0]);
+        window.location.href = url.toString();
+    });
+});
+</script>
+{% endblock %}

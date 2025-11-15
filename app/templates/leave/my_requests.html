@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Đơn từ của tôi{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Lịch sử Đơn từ của tôi</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Loại đơn</th>
+                            <th>Ngày/Thời gian</th>
+                            <th>Lý do</th>
+                            <th class="text-center">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td>
+                                {% if req.request_type == 'leave' %} Nghỉ phép
+                                {% elif req.request_type == 'late' %} Đi trễ
+                                {% elif req.request_type == 'early' %} Về sớm
+                                {% elif req.request_type == 'shift_change' %} Đổi ca
+                                {% else %} {{ req.request_type }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if req.relevant_date %}
+                                    {{ req.relevant_date.strftime('%d/%m/%Y') }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ req.reason }}</td>
+                            <td class="text-center">
+                                {% if req.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark">Đang chờ</span>
+                                {% elif req.status == 'approved' %}
+                                    <span class="badge bg-success">Đã duyệt</span>
+                                {% elif req.status == 'rejected' %}
+                                    <span class="badge bg-danger">Từ chối</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">Bạn chưa có đơn từ nào.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="{{ url_for('attendance.dashboard') }}" class="btn btn-secondary mt-3">Quay lại Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

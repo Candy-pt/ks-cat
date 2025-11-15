@@ -4,10 +4,11 @@
 <div class="card">
     <div class="card-header">
         <h3 style="text-align: center;">Lịch sử điểm danh toàn bộ nhân viên</h3>
-        
+        <a href="{{ url_for('attendance.dashboard') }}" class="btn btn-secondary mt-3">Quay Lại</a>
         <div class="row justify-content">
             <div class="col-md-4">
                 <form method="GET" action="{{ url_for('attendance.all_history') }}" class="mt-3">
+                    
                     <div class="input-group">
                         
                         <span class="input-group-text" id="filter-addon">
@@ -26,7 +27,7 @@
                                 </option>
                             {% endfor %}
                         </select>
-
+                        
                     </div>
                 </form>
             </div>
@@ -113,7 +114,6 @@
             </ul>
         </nav>
         {% endif %}
-        <a href="{{ url_for('attendance.dashboard') }}" class="btn btn-secondary mt-3">Quay Lại</a>
     </div>
 </div>
 

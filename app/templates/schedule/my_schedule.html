@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Lịch làm việc của tôi{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Lịch của bạn: {{ display_days[0].strftime('%d/%m') }} - {{ display_days[-1].strftime('%d/%m/%Y') }}</h4>
+                    <div>
+                        <button id="prev-3-days" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-chevron-left"></i> 3 ngày trước
+                        </button>
+                        <button id="next-3-days" class="btn btn-outline-secondary btn-sm">
+                            3 ngày sau <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    {% for day in display_days %}
+                                    <th>
+                                        {{ day.strftime('%a') | safe }} <br> {{ day.strftime('%d/%m') | safe }}
+                                    </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    {% for day in display_days %}
+                                        <td>
+                                            {% set schedule = week_schedule[day] %}
+                                            {% if schedule %}
+                                                <div class="schedule-item-readonly">
+                                                    <strong>{{ schedule.shift.name }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        {{ schedule.shift.start_time.strftime('%H:%M') }} -
+                                                        {{ schedule.shift.end_time.strftime('%H:%M') }}
+                                                    </small>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">Ngày nghỉ</span>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.schedule-item-readonly {
+    background-color: #e8f5e9; 
+    border: 1px solid #4caf50;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.9em;
+    min-height: 70px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const url = new URL(window.location);
+    const currentStart = new Date('{{ display_days[0].strftime("%Y-%m-%d") }}T00:00:00');
+
+    document.getElementById('prev-3-days').addEventListener('click', function() {
+        currentStart.setDate(currentStart.getDate() - 3);
+        url.searchParams.set('start_date', currentStart.toISOString().split('T')[0]);
+        window.location.href = url.toString();
+    });
+
+    document.getElementById('next-3-days').addEventListener('click', function() {
+        currentStart.setDate(currentStart.getDate() + 3);
+        url.searchParams.set('start_date', currentStart.toISOString().split('T')[0]);
+        window.location.href = url.toString();
+    });
+});
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if session.username %}
-                    
+
                     <li class="nav-item d-none d-lg-block me-3">
                         <span class="navbar-text">Xin chào, {{ session.username }}!</span>
                     </li>
@@ -27,7 +27,7 @@
                     <li class="nav-item">
                         <a href="{{ url_for('notification.list_notifications') }}" class="nav-link position-relative">
                             <i class="fas fa-bell"></i>
-                            
+
                             {% if g.unread_notifications_count > 0 %}
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6em;">
                                 {{ g.unread_notifications_count }}
@@ -38,24 +38,36 @@
 
                     <li class="nav-item profile-dropdown">
                         <button class="avatar-button" id="avatarButton">
-                            <img src="{{ url_for('static', filename='uploads/' + (session.avatar_image or 'default-avatar.png')) }}" 
+                            <img src="{{ url_for('static', filename='uploads/' + (session.avatar_image or 'default-avatar.png')) }}"
                                 alt="Avatar"
                                 style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"> </button>
-                        
+
                         <div class="dropdown-content" id="dropdownMenu">
-                            <div class="dropdown-arrow"></div> 
+                            <div class="dropdown-arrow"></div>
                             <a href="{{ url_for('user.profile') }}">
                                 <i class="fa-regular fa-user"></i>
                                 <span>Thông tin cá nhân</span>
                             </a>
-                        
-                            <a href="{{ url_for('attendance.dashboard') }}">
-                                <i class="fa-solid fa-book"></i>
-                                <span>Đơn từ </span>
+
+                            <a href="{{ url_for('leave.my_requests') }}">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Quản lý đơn từ</span>
                             </a>
-                          
+
+                            {% if session.role == 'admin' %}
+                                <a href="{{ url_for('schedule.calendar') }}">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Xếp Lịch làm việc</span>
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('schedule.my_schedule') }}">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Lịch làm việc</span>
+                                </a>
+                            {% endif %}
+
                             <div class="dropdown-divider"></div>
-                            
+
                             <a href="{{ url_for('auth.logout') }}">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Đăng xuất</span>

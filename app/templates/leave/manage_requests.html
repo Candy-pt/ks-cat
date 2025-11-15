@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Đơn từ{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Quản lý Đơn từ</h3>
+        </div>
+        <div class="card-body">
+            
+            <ul class="nav nav-tabs mb-3">
+                <li class="nav-item">
+                    <a class="nav-link {% if current_status == 'pending' %}active{% endif %}" 
+                       href="{{ url_for('leave.manage_requests', status='pending') }}">
+                       Đang chờ duyệt
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_status == 'approved' %}active{% endif %}" 
+                       href="{{ url_for('leave.manage_requests', status='approved') }}">
+                       Đã duyệt
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_status == 'rejected' %}active{% endif %}" 
+                       href="{{ url_for('leave.manage_requests', status='rejected') }}">
+                       Đã từ chối
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_status == 'all' %}active{% endif %}" 
+                       href="{{ url_for('leave.manage_requests', status='all') }}">
+                       Tất cả
+                    </a>
+                </li>
+            </ul>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nhân viên</th>
+                            <th>Loại đơn</th>
+                            <th>Ngày/Thời gian</th>
+                            <th>Lý do</th>
+                            <th class="text-center">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                        <tr>
+                            <td>{{ req.user.username }}</td>
+                            <td>
+                                {% if req.request_type == 'leave' %} Nghỉ phép
+                                {% elif req.request_type == 'late' %} Đi trễ
+                                {% elif req.request_type == 'early' %} Về sớm
+                                {% elif req.request_type == 'shift_change' %} Đổi ca
+                                {% else %} {{ req.request_type }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if req.relevant_date %}
+                                    {{ req.relevant_date.strftime('%d/%m/%Y') }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ req.reason }}</td>
+                            
+                            <td class="text-center">
+                                {% if req.status == 'pending' %}
+                                    <form action="{{ url_for('leave.process_request', request_id=req.id) }}" method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="approved">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="fas fa-check"></i> Duyệt
+                                        </button>
+                                    </form>
+                                    <form action="{{ url_for('leave.process_request', request_id=req.id) }}" method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="rejected">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-times"></i> Từ chối
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    {% if req.status == 'approved' %}
+                                        <span class="badge bg-success">Đã duyệt</span>
+                                    {% elif req.status == 'rejected' %}
+                                        <span class="badge bg-danger">Đã từ chối</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">Không có đơn từ nào.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

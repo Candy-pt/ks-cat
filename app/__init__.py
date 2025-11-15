@@ -48,6 +48,7 @@ def create_app(config_class=Config):
     from .leave.routes import leave_bp
     from .notification.routes import notification_bp
     from .user.routes import user_bp
+    from .schedule.routes import schedule_bp
 
     
     app.register_blueprint(auth_bp)
@@ -58,6 +59,7 @@ def create_app(config_class=Config):
     app.register_blueprint(leave_bp)
     app.register_blueprint(notification_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(schedule_bp)
 
 
     return app
