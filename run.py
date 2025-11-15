@@ -19,6 +19,7 @@ def init_db():
             print("User mẫu 'admin' (pass: 123, role: admin) đã được tạo!")
         # Thêm các settings mặc định nếu cần
 
-if __name__ == '__main__':
-    init_db()
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     init_db()
+
+#     app.run(debug=True)
